@@ -1,5 +1,7 @@
 <?php
 
+use function Laravel\Prompts\table;
+
 return [
 
     /*
@@ -62,7 +64,9 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\Player::class,
+    
+
         ],
 
         // 'users' => [
