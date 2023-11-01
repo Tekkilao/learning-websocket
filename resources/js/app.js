@@ -59,16 +59,13 @@ const stickman = {
 
 function updateStickmanPositions(users) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    console.log('users', users)
 
     Object.values(users).forEach(userData => {
         if (userData != null) {
-        const {id, x, y} = userData;
-        console.log('oq é id', id);
-        console.log('oq é x', x)
-        console.log('oq é y', y);
+            const {id, x, y} = userData;
 
-        drawStickman(x, y, user)
+            drawStickman(users.x,  users.y, users.user)
+
         }
         else {
             console.log("user data null")
