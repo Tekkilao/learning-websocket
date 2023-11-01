@@ -10,10 +10,12 @@ let initial_position = {
 
 const channel = Echo.channel('game');
 
-channel.listen('UserMoved', (data, initial_position) => {
+channel.listen('UserMoved', (data) => {
             users[data.user.id] = data.position;
+            // console.log("meteçao de loko", data.position)
+            console.log("gatiau", data)
             // console.log('teste1')
-            updateStickmanPositions(users)
+            updateStickmanPositions(data)
         })
 
 
@@ -26,6 +28,8 @@ axios.get('/api/user-data')
     .catch(error => {
         console.error('error gettin user', error)
     })
+
+
 
 // axios.get('/api/user-data')
 //     .then(response => {
@@ -55,35 +59,38 @@ const stickman = {
 
 function updateStickmanPositions(users) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    console.log('users', users)
 
     Object.values(users).forEach(userData => {
-        // if (userData != null) {
-        const {id, position} = userData;
-        console.log(position)
-        drawStickman(position, user)
-        // }
-        // else {
-        //     console.log("user data null")
-        //     console.log("userdata:", userData);
-        // }
+        if (userData != null) {
+        const {id, x, y} = userData;
+        console.log('oq é id', id);
+        console.log('oq é x', x)
+        console.log('oq é y', y);
+
+        drawStickman(x, y, user)
+        }
+        else {
+            console.log("user data null")
+        }
     })
 }
 
 
-function drawStickman(stickman, user) {
-    if (stickman && typeof stickman.x !== 'undefined' && typeof stickman.y !== 'undefined') {
+function drawStickman(x, y, user) {
+    if (stickman && typeof x !== 'undefined' && typeof y !== 'undefined') {
         ctx.beginPath();
         ctx.font = "12px serif";
-        ctx.fillText(user.user, stickman.x - 25, stickman.y - 50);
+        ctx.fillText(user.user, x - 25, y - 50);
 
         // Barra de HP (retângulo vermelho)
         const maxHP = 100; // Valor máximo de HP
-        const currentHP = 75; // Valor atual de HP (ajuste conforme necessário)
+        const currentHP = user.currentHP; // Valor atual de HP (ajuste conforme necessário)
     
         const hpBarWidth = 40;
         const hpBarHeight = 5;
-        const hpBarX = stickman.x - hpBarWidth / 2;
-        const hpBarY = stickman.y - 45;
+        const hpBarX = x - hpBarWidth / 2;
+        const hpBarY = y - 45;
     
         // Desenhe o contorno da barra de HP
         ctx.strokeStyle = "black";
@@ -97,31 +104,31 @@ function drawStickman(stickman, user) {
 
     // Cabeça
     ctx.beginPath();
-    ctx.arc(stickman.x, stickman.y - 15, 20, 0, Math.PI * 2);
+    ctx.arc(x, y - 15, 20, 0, Math.PI * 2);
     ctx.fillStyle = "black";
     ctx.fill();
     ctx.closePath();
 
     // Corpo
     ctx.beginPath();
-    ctx.moveTo(stickman.x, stickman.y);
-    ctx.lineTo(stickman.x, stickman.y + 60);
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y + 60);
     ctx.strokeStyle = "black";
     ctx.stroke();
     ctx.closePath();
 
     // Braços
     ctx.beginPath();
-    ctx.moveTo(stickman.x, stickman.y + 10);
-    ctx.lineTo(stickman.x - 20, stickman.y + 30);
+    ctx.moveTo(x, y + 10);
+    ctx.lineTo(x - 20, y + 30);
 
     ctx.strokeStyle = "black";
     ctx.stroke();
     ctx.closePath();
 
     ctx.beginPath();
-    ctx.moveTo(stickman.x, stickman.y + 10);
-    ctx.lineTo(stickman.x + 20, stickman.y + 30);
+    ctx.moveTo(x, y + 10);
+    ctx.lineTo(x + 20, y + 30);
 
     ctx.strokeStyle = "black";
     ctx.stroke();
@@ -129,23 +136,21 @@ function drawStickman(stickman, user) {
 
     // Pernas
     ctx.beginPath();
-    ctx.moveTo(stickman.x, stickman.y + 60);
-    ctx.lineTo(stickman.x - 10, stickman.y + 90);
+    ctx.moveTo(x, y + 60);
+    ctx.lineTo(x - 10, y + 90);
     ctx.strokeStyle = "black";
     ctx.stroke();
     ctx.closePath();
 
     ctx.beginPath();
-    ctx.moveTo(stickman.x, stickman.y + 60);
-    ctx.lineTo(stickman.x + 10, stickman.y + 90);
+    ctx.moveTo(x, y + 60);
+    ctx.lineTo(x + 10, y + 90);
     ctx.strokeStyle = "black";
     ctx.stroke();
     ctx.closePath();
 } else {
     console.error('Posição inválida');
 }
-
-    
 }
 
 document.addEventListener("keydown", (event) => {
@@ -183,7 +188,7 @@ document.addEventListener("keydown", (event) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Redesenha o boneco
-    drawStickman(stickman, user);
+    drawStickman(stickman.x, stickman.y, user);
 });
 
 

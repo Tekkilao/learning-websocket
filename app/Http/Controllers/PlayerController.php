@@ -49,9 +49,10 @@ class PlayerController extends Controller
 
    public function moveStickman(Request $request) {
         $user = Auth::user();
-        $position = $request->position;
+        $x = $request->x;
+        $y = $request->y;
         
-        broadcast(new UserMoved($user, $position))->toOthers();
+        broadcast(new UserMoved($user, $x, $y))->toOthers();
         return response()->json(['message' => 'se moveu com sucesso']);
    }
 }

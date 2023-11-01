@@ -15,15 +15,17 @@ class UserMoved implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
-    public $position;
+    public $x;
+    public $y;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($user, $position)
+    public function __construct($user, $x, $y)
     {
         $this->user = $user;
-        $this->position = $position;
+        $this->x = $x;
+        $this->y = $y;
     }
 
     /**
