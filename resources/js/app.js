@@ -2,10 +2,20 @@ import './bootstrap';
 
 let user;
 let users = {};
+
 let initial_position = {
     x: 0,
     y: 0
 }
+
+const channel = Echo.channel('game');
+
+channel.listen('UserMoved', (data, initial_position) => {
+            users[data.user.id] = data.position;
+            // console.log('teste1')
+            updateStickmanPositions(users)
+        })
+
 
 axios.get('/api/user-data')
     .then(response => {
@@ -17,21 +27,21 @@ axios.get('/api/user-data')
         console.error('error gettin user', error)
     })
 
-axios.get('/api/user-data')
-    .then(response => {
-        const user = response.data;
+// axios.get('/api/user-data')
+//     .then(response => {
+//         const user = response.data;
         
-        Echo.channel('game')
-        .listen('.UserMoved', (event) => {
-            users[event.user.id] = event.position;
-            console.log('teste')
-            updateStickmanPositions(users)
-        })
+//         Echo.channel('game')
+//         .listen('.UserMoved', (event) => {
+//             users[event.user.id] = event.position;
+//             console.log('teste2')
+//             updateStickmanPositions(users)
+//         })
         
-    })
-    .catch(error => {
-        console.error('Error while getting user data', error);
-    })
+//     })
+//     .catch(error => {
+//         console.error('Error while getting user data', error);
+//     })
 
 const canvas = document.getElementById("stickmanCanvas");
 const ctx = canvas.getContext("2d");
@@ -47,9 +57,15 @@ function updateStickmanPositions(users) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     Object.values(users).forEach(userData => {
+        // if (userData != null) {
         const {id, position} = userData;
         console.log(position)
         drawStickman(position, user)
+        // }
+        // else {
+        //     console.log("user data null")
+        //     console.log("userdata:", userData);
+        // }
     })
 }
 
@@ -157,6 +173,7 @@ document.addEventListener("keydown", (event) => {
         .catch(error => {
             console.error('Erro ao se mover', error);
         })
+
 
 
 
