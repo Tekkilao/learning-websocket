@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 
 class PlayerController extends Controller
 {
@@ -48,8 +49,9 @@ class PlayerController extends Controller
 
    public function moveStickman(Request $request) {
         $user = Auth::user();
+        $position = $request->position;
         
-        event(new UserMoved($user, ['x' => $request->x, 'y' => $request->y]));
+        broadcast(new UserMoved($user, $position))->toOthers();
         return response()->json(['message' => 'se moveu com sucesso']);
    }
 }

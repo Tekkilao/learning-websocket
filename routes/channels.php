@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\UserMoved;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -16,3 +17,9 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+
+Broadcast::channel('game', function ($user, $position) {
+    return true; // Isso permitirá a todos os usuários participarem do canal "game"
+});
+
